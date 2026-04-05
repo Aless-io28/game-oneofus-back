@@ -1,0 +1,16 @@
+{
+  "errors": {
+    "fields": {
+      "required": "Este campo es obligatorio.",
+      "string": {
+        "between": "El valor debe tener entre {{min}} y {{max}} caracteres.",
+        "invalid": {
+          "simple": "El valor solo acepta caracteres alfanuméricos, puntos y guiones bajos.",
+          "email": "El valor proporcionado no es un correo electrónico válido.",
+          "password": "Debe contener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y caracteres especiales.",
+          "url": "El valor proporcionado no es una URL valida."
+        }
+      }
+    }
+  }
+}
