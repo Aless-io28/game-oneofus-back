@@ -38,7 +38,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         }),
       );
 
-      ResponseWrapper.error(fieldErrors);
+      return response.status(400).json(ResponseWrapper.error(fieldErrors));
     }
 
     //  Manejar excepciones personalizadas que extienden de BaseException
@@ -51,7 +51,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         },
       );
 
-      ResponseWrapper.error([], translateMessage);
+      return response
+        .status(exception.errorCode.status)
+        .json(ResponseWrapper.error([], translateMessage));
     }
 
     const status =

@@ -1,3 +1,4 @@
+import { AuthUserPayload } from '@common/interfaces/auth-user-payload.interface';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -5,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 export class JwtAuthService {
   constructor(private readonly jwtService: JwtService) {}
 
-  generateToken(payload: any): string {
+  generateToken(payload: AuthUserPayload): string {
     return this.jwtService.sign(payload);
   }
 

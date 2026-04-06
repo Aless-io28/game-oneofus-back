@@ -1,16 +1,23 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './modules/user/user.module';
-import { I18nModule } from 'nestjs-i18n';
-import path from 'node:path';
+import { HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+
+import { ConfigModule } from '@nestjs/config';
+import authConfig from '@config/auth/auth.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [authConfig],
+    }),
     I18nModule.forRoot({
       fallbackLanguage: 'es',
       loaderOptions: {
-        path: path.join(__dirname, '/i18n/'),
+        path: `${process.cwd()}/src/i18n/`,
         watch: true,
       },
+      resolvers: [new QueryResolver(['lang']), new HeaderResolver()],
     }),
     UserModule,
   ],

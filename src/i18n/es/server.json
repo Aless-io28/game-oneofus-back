@@ -1,0 +1,9 @@
+{
+  "unauthorized": "No autorizado.",
+  "forbidden": "Prohibido.",
+  "internalServerError": "Error interno del servidor.",
+  "badRequest": "Solicitud incorrecta.",
+  "notFound": "No encontrado.",
+  "validationFailed": "La validación ha fallado.",
+  "success": "Operación exitosa."
+}

@@ -1,14 +1,20 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
+import { JwtModule } from '@nestjs/jwt';
+
 import { USER_REPOSITORY } from './domain/repository/user-repository.interface';
-import UserRepositoryAdapter from './infrastructure/adapters/output/persistence/repository/user-repository.adapter';
+import UserRepositoryAdapter from './infrastructure/adapters/output/prisma/repository/user-repository.adapter';
+
 import { AUTH_REGISTER } from './application/usecases/auth-register.usecase';
 import AuthRegisterService from './application/services/auth-register.service';
-import { JwtModule } from '@nestjs/jwt';
+
+import AuthController from './infrastructure/adapters/input/rest/controller/auth.controller';
+import { JwtAuthService } from './application/services/jwt.service';
+import { AuthConfigService } from '@config/auth/auth-config.service';
+import { PrismaModule } from '@database/prisma/prisma.module';
 
 @Module({
   imports: [
+    PrismaModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {
@@ -16,7 +22,7 @@ import { JwtModule } from '@nestjs/jwt';
       },
     }),
   ],
-  controllers: [UserController],
+  controllers: [AuthController],
   providers: [
     {
       provide: USER_REPOSITORY,
@@ -26,7 +32,8 @@ import { JwtModule } from '@nestjs/jwt';
       provide: AUTH_REGISTER,
       useClass: AuthRegisterService,
     },
-    UserService,
+    JwtAuthService,
+    AuthConfigService,
   ],
 })
 export class UserModule {}

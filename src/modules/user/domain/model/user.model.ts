@@ -1,18 +1,16 @@
-import { UUID } from 'node:crypto';
-
 import ValidatorError from '@common/error/validator.error';
 import { UserRule } from '../rules/user.rule';
 import { UserErrorCode } from '../errors/user.error';
 
 class User {
-  private userId: UUID | null;
+  private userId: string | null;
   private username: string;
   private email: string;
   private password: string;
   private createdAt: Date | null;
 
   constructor(
-    userId: UUID | null,
+    userId: string | null,
     username: string,
     email: string,
     password: string,
@@ -48,7 +46,7 @@ class User {
   }
 
   public static fromPersistence(
-    userId: UUID,
+    userId: string,
     username: string,
     email: string,
     password: string,
@@ -60,11 +58,16 @@ class User {
   /**
    * VALIDATORS
    */
+
+  // USERNAME
   static validateUsername(username: string, validator: ValidatorError) {
     const { MIN = 0, MAX, REQUIRED, PATTERN } = UserRule.USERNAME;
 
     if (REQUIRED && !username) {
-      return validator.add(UserErrorCode.REQUIRED);
+      return validator.add({
+        ...UserErrorCode.REQUIRED,
+        field: UserRule.USERNAME.FIELD,
+      });
     }
 
     if (username.length < MIN || username.length > MAX) {
@@ -76,11 +79,15 @@ class User {
     }
   }
 
+  // EMAIL
   static validateEmail(email: string, validator: ValidatorError) {
     const { MIN = 0, MAX, REQUIRED, PATTERN } = UserRule.EMAIL;
 
     if (REQUIRED && !email) {
-      return validator.add(UserErrorCode.REQUIRED);
+      return validator.add({
+        ...UserErrorCode.REQUIRED,
+        field: UserRule.EMAIL.FIELD,
+      });
     }
 
     if (email.length < MIN || email.length > MAX) {
@@ -92,11 +99,15 @@ class User {
     }
   }
 
+  // PASSWORD
   static validatePassword(password: string, validator: ValidatorError) {
     const { MIN = 0, MAX, REQUIRED, PATTERN } = UserRule.PASSWORD;
 
     if (REQUIRED && !password) {
-      return validator.add(UserErrorCode.REQUIRED);
+      return validator.add({
+        ...UserErrorCode.REQUIRED,
+        field: UserRule.PASSWORD.FIELD,
+      });
     }
 
     if (password.length < MIN || password.length > MAX) {
@@ -111,7 +122,7 @@ class User {
   /**
    * GETTERS
    */
-  public getUserId(): UUID | null {
+  public getUserId(): string | null {
     return this.userId;
   }
   public getUsername(): string {

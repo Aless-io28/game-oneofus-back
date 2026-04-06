@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import AuthRegisterUseCase from '../usecases/auth-register.usecase';
 import { UserErrorCode } from '@modules/user/domain/errors/user.error';
@@ -9,6 +9,7 @@ import UserException from '@modules/user/domain/errors/user.exception';
 import User from '@modules/user/domain/model/user.model';
 import { JwtAuthService } from './jwt.service';
 
+@Injectable()
 export default class AuthRegisterService implements AuthRegisterUseCase {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepo: UserRepository,
@@ -32,8 +33,8 @@ export default class AuthRegisterService implements AuthRegisterUseCase {
 
     // Generar el token JWT para el nuevo usuario registrado
     const token = this.jwtAuthService.generateToken({
-      sub: userCreate.getUserId(),
-      email: userCreate.getEmail(),
+      userId: userCreate.getUserId(),
+      username: userCreate.getUsername(),
     });
 
     return token;
