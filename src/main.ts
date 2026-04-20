@@ -9,6 +9,7 @@ import { ResponseInterceptor } from '@common/interceptor/response.interceptor';
 import { GlobalExceptionFilter } from '@common/exception/global-exception.filter';
 import { ErrorCode } from '@common/error/error-code.interface';
 import ValidationException from '@common/error/validation.exception';
+import { AuthConfigService } from '@config/auth/auth-config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +26,7 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
+      // Sirve para transformar los errores de validación en una excepción personalizada
       exceptionFactory: (errors) => {
         const listErrors: ErrorCode[] = [];
 
@@ -43,7 +45,9 @@ async function bootstrap() {
   );
 
   app.useGlobalInterceptors(new ResponseInterceptor());
-  app.useGlobalFilters(new GlobalExceptionFilter(app.get(I18nService)));
+  app.useGlobalFilters(
+    new GlobalExceptionFilter(app.get(I18nService), app.get(AuthConfigService)),
+  );
 
   await app.listen(process.env.PORT ?? 3000);
 }

@@ -6,12 +6,13 @@ import { JwtService } from '@nestjs/jwt';
 export class JwtAuthService {
   constructor(private readonly jwtService: JwtService) {}
 
-  generateToken(payload: AuthUserPayload): string {
-    return this.jwtService.sign(payload);
+  async generateToken(payload: AuthUserPayload): Promise<string> {
+    const token = await this.jwtService.signAsync(payload);
+    return token;
   }
 
-  verifyToken(token: string): any {
-    return this.jwtService.verify(token);
+  async verifyToken(token: string): Promise<any> {
+    return await this.jwtService.verifyAsync(token);
   }
 
   decodeToken(token: string): any {

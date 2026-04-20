@@ -32,12 +32,12 @@ class User {
 
     User.validateUsername(username, validator);
     User.validateEmail(email, validator);
-    User.validatePassword(password, validator);
+    // User.validatePassword(password, validator); // validar antes, aqui pasa la contraseña hasheada, no la original
 
     validator.validate();
 
     return new User(
-      null, // Generate or assign a userId here
+      null, // Set by database default (uuid)
       username,
       email,
       password,

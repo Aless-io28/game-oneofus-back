@@ -2,6 +2,11 @@ import { ErrorCode } from '@common/error/error-code.interface';
 import { UserRule } from '../rules/user.rule';
 
 export const UserErrorCode: Record<string, ErrorCode> = {
+  USER_EXISTS: {
+    code: 'USER_000',
+    message: 'user.exception.exists',
+    status: 400,
+  },
   EMAIL_EXISTS: {
     code: 'USER_001',
     message: 'user.email.exists',

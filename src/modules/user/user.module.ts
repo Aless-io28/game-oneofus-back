@@ -11,16 +11,24 @@ import AuthController from './infrastructure/adapters/input/rest/controller/auth
 import { JwtAuthService } from './application/services/jwt.service';
 import { AuthConfigService } from '@config/auth/auth-config.service';
 import { PrismaModule } from '@database/prisma/prisma.module';
+import { AuthConfigModule } from '@config/auth/auth-config.module';
+import { HashModule } from '@common/security/hash/hash.module';
 
 @Module({
   imports: [
     PrismaModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: {
-        expiresIn: Number(process.env.JWT_EXPIRES_IN) * 60,
-      },
+    AuthConfigModule,
+    JwtModule.registerAsync({
+      imports: [AuthConfigModule],
+      inject: [AuthConfigService],
+      useFactory: (authConfigService: AuthConfigService) => ({
+        secret: authConfigService.jwtSecret,
+        signOptions: {
+          expiresIn: authConfigService.jwtExpiresIn,
+        },
+      }),
     }),
+    HashModule,
   ],
   controllers: [AuthController],
   providers: [

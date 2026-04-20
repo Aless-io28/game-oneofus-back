@@ -15,7 +15,7 @@ export default class AuthController {
   @Post('register')
   async create(
     @Body() dto: UserCreateDto,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response, // para que el interceptor siga manejando la respuesta
   ): Promise<boolean> {
     const token = await this.authRegister.execute(
       dto.username,

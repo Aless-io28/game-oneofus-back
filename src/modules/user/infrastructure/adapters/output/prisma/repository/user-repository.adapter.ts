@@ -58,7 +58,6 @@ export default class UserRepositoryAdapter implements UserRepository {
   async save(user: User): Promise<User> {
     await this.prisma.user.create({
       data: {
-        userId: user.getUserId()!,
         username: user.getUsername(),
         email: user.getEmail(),
         password: user.getPassword(),

@@ -1,5 +1,9 @@
 {
+  "exception": {
+    "exists": "El usuario ya existe."
+  },
   "username": {
+    "exists": "El nombre de usuario ya existe.",
     "error": {
       "required": "El nombre de usuario es obligatorio.",
       "minLength": "El nombre de usuario debe tener al menos 3 caracteres.",
@@ -7,6 +11,7 @@
     }
   },
   "email": {
+    "exists": "El correo electrónica ya existe.",
     "error": {
       "required": "El correo electrónico es obligatorio.",
       "invalid": "El correo electrónico no es válido."
