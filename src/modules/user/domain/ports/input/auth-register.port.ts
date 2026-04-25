@@ -1,4 +1,4 @@
-export default interface AuthRegisterUseCase {
+export default interface AuthRegisterPort {
   execute(username: string, email: string, password: string): Promise<string>;
 }
 

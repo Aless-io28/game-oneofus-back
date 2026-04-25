@@ -1,18 +1,25 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
-import { USER_REPOSITORY } from './domain/repository/user-repository.interface';
-import UserRepositoryAdapter from './infrastructure/adapters/output/prisma/repository/user-repository.adapter';
-
-import { AUTH_REGISTER } from './application/usecases/auth-register.usecase';
-import AuthRegisterService from './application/services/auth-register.service';
-
-import AuthController from './infrastructure/adapters/input/rest/controller/auth.controller';
-import { JwtAuthService } from './application/services/jwt.service';
 import { AuthConfigService } from '@config/auth/auth-config.service';
 import { PrismaModule } from '@database/prisma/prisma.module';
 import { AuthConfigModule } from '@config/auth/auth-config.module';
 import { HashModule } from '@common/security/hash/hash.module';
+
+import AuthController from './infrastructure/adapters/input/rest/controller/auth.controller';
+import { JwtAuthService } from './application/service/jwt.service';
+
+import { AUTH_REGISTER } from './domain/ports/input/auth-register.port';
+import AuthRegisterUseCase from './application/usecase/auth-register.usecase';
+import { AUTH_LOGIN } from './domain/ports/input/auth-login.port';
+import AuthLoginUseCase from './application/usecase/auth-login.usecase';
+
+import { USER_REPOSITORY } from './domain/ports/out/user-repository.port';
+import UserRepositoryAdapter from './infrastructure/adapters/output/prisma/repository/user-repository.adapter';
+import JwtStrategy from './infrastructure/strategy/jwt-strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { ValidateSessionUseCase } from './application/usecase/validate-session.usecase';
+import JwtAuthGuard from './infrastructure/guard/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -32,16 +39,31 @@ import { HashModule } from '@common/security/hash/hash.module';
   ],
   controllers: [AuthController],
   providers: [
+    ValidateSessionUseCase,
+    JwtAuthGuard,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: USER_REPOSITORY,
       useClass: UserRepositoryAdapter,
     },
     {
       provide: AUTH_REGISTER,
-      useClass: AuthRegisterService,
+      useClass: AuthRegisterUseCase,
+    },
+    {
+      provide: AUTH_LOGIN,
+      useClass: AuthLoginUseCase,
+    },
+    {
+      provide: 'TOKEN_VALIDATOR',
+      useClass: JwtStrategy,
     },
     JwtAuthService,
     AuthConfigService,
   ],
+  exports: [ValidateSessionUseCase, JwtAuthService],
 })
 export class UserModule {}

@@ -11,8 +11,15 @@ export class PrismaService
   private pool: Pool;
 
   constructor() {
+    if (!process.env['DB_URL']) {
+      throw new Error(
+        'DB_URL is not defined. Check your environment variables.',
+      );
+    }
+
     const pool = new Pool({
       connectionString: process.env['DB_URL'],
+      connectionTimeoutMillis: 5000,
     });
 
     const adapter = new PrismaPg(pool);
@@ -22,8 +29,19 @@ export class PrismaService
     this.pool = pool;
   }
 
+  // Verificar la conexión a la base de datos al iniciar el módulo
   async onModuleInit() {
-    await this.$connect();
+    try {
+      await this.$connect();
+      await this.pool.query('SELECT 1');
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Unknown database connection error';
+
+      throw new Error(`Failed to connect to database: ${message}`);
+    }
   }
 
   async onModuleDestroy() {

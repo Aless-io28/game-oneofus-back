@@ -3,19 +3,17 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { AuthUserPayload } from '@common/interfaces/auth-user-payload.interface';
-import { ConfigService } from '@nestjs/config';
+import { AuthConfigService } from '@config/auth/auth-config.service';
+import { TokenValidatorPort } from '@modules/user/domain/ports/out/token-validator.port';
 
 @Injectable()
-export default class JwtStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-auth',
-) {
-  constructor(private readonly configService: ConfigService) {
-    const cookieName = configService.get<string>(
-      'auth.cookieName',
-      'access_token',
-    );
-    const secret = configService.get<string>('JWT_SECRET');
+export default class JwtStrategy
+  extends PassportStrategy(Strategy, 'jwt-auth')
+  implements TokenValidatorPort
+{
+  constructor(private authConfig: AuthConfigService) {
+    const cookieName = authConfig.cookieName;
+    const secret = authConfig.jwtSecret;
 
     if (!secret) {
       throw new Error('JWT_SECRET is required');
@@ -32,7 +30,9 @@ export default class JwtStrategy extends PassportStrategy(
     });
   }
 
-  validate(payload: AuthUserPayload): AuthUserPayload {
+  // Passport llama esto automáticamente tras verificar la firma
+  validate(payload: AuthUserPayload): AuthUserPayload | null {
+    if (!payload?.userId || !payload?.username) return null;
     return {
       userId: payload?.userId || null,
       username: payload?.username || null,

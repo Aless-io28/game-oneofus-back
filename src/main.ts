@@ -21,6 +21,8 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // app.useGlobalGuards(...)   // si ya se tiene el APP_GUARD
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -51,4 +53,10 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
 }
-void bootstrap();
+
+void bootstrap().catch((error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  // Fail fast when infrastructure dependencies (like DB) are unavailable.
+  console.error('Application bootstrap failed:', message);
+  process.exit(1);
+});

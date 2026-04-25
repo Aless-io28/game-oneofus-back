@@ -1,4 +1,4 @@
-import User from '../model/user.model';
+import User from '../../model/user.model';
 
 export default interface UserRepository {
   findByUsername(username: string): Promise<User | null>;

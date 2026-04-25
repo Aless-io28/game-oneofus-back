@@ -1,18 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import AuthRegisterUseCase from '../usecases/auth-register.usecase';
 import { UserErrorCode } from '@modules/user/domain/errors/user.error';
 
-import type UserRepository from '@modules/user/domain/repository/user-repository.interface';
-import { USER_REPOSITORY } from '@modules/user/domain/repository/user-repository.interface';
 import UserException from '@modules/user/domain/errors/user.exception';
 import User from '@modules/user/domain/model/user.model';
 import ValidatorError from '@common/error/validator.error';
 import { HASH_SERVICE, HashService } from '@common/security/hash/has.service';
-import { JwtAuthService } from './jwt.service';
+import { JwtAuthService } from '../service/jwt.service';
+import AuthRegisterPort from '@modules/user/domain/ports/input/auth-register.port';
+import UserRepository, {
+  USER_REPOSITORY,
+} from '@modules/user/domain/ports/out/user-repository.port';
 
 @Injectable()
-export default class AuthRegisterService implements AuthRegisterUseCase {
+export default class AuthRegisterUseCase implements AuthRegisterPort {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepo: UserRepository,
     private readonly jwtAuthService: JwtAuthService,
