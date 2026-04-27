@@ -7,7 +7,7 @@ import { AuthConfigModule } from '@config/auth/auth-config.module';
 import { HashModule } from '@common/security/hash/hash.module';
 
 import AuthController from './infrastructure/adapters/input/rest/controller/auth.controller';
-import { JwtAuthService } from './application/service/jwt.service';
+import { JwtAuthService } from './infrastructure/service/jwt.service';
 
 import { AUTH_REGISTER } from './domain/ports/input/auth-register.port';
 import AuthRegisterUseCase from './application/usecase/auth-register.usecase';
@@ -16,9 +16,10 @@ import AuthLoginUseCase from './application/usecase/auth-login.usecase';
 
 import { USER_REPOSITORY } from './domain/ports/out/user-repository.port';
 import UserRepositoryAdapter from './infrastructure/adapters/output/prisma/repository/user-repository.adapter';
-import JwtStrategy from './infrastructure/strategy/jwt-strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { ValidateSessionUseCase } from './application/usecase/validate-session.usecase';
+
+import { JWT_SERVICE } from './domain/ports/out/jwt.port';
 import JwtAuthGuard from './infrastructure/guard/jwt-auth.guard';
 
 @Module({
@@ -57,13 +58,16 @@ import JwtAuthGuard from './infrastructure/guard/jwt-auth.guard';
       provide: AUTH_LOGIN,
       useClass: AuthLoginUseCase,
     },
+    // {
+    //   provide: TOKEN_VALIDATOR,
+    //   useClass: JwtStrategy,
+    // },
     {
-      provide: 'TOKEN_VALIDATOR',
-      useClass: JwtStrategy,
+      provide: JWT_SERVICE,
+      useClass: JwtAuthService,
     },
-    JwtAuthService,
     AuthConfigService,
   ],
-  exports: [ValidateSessionUseCase, JwtAuthService],
+  exports: [ValidateSessionUseCase, JWT_SERVICE],
 })
 export class UserModule {}

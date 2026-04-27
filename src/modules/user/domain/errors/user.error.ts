@@ -1,7 +1,7 @@
 import { ErrorCode } from '@common/error/error-code.interface';
 import { UserRule } from '../rules/user.rule';
 
-export const UserErrorCode: Record<string, ErrorCode> = {
+export const UserErrorCode = {
   USER_EXISTS: {
     code: 'USER_000',
     message: 'user.exception.exists',
@@ -88,4 +88,4 @@ export const UserErrorCode: Record<string, ErrorCode> = {
       max: UserRule.PASSWORD.MAX,
     },
   },
-} as const;
+} as const satisfies Record<string, ErrorCode>;

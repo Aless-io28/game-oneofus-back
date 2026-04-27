@@ -9,4 +9,12 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/Category'
+export type * from './models/Word'
+export type * from './models/Room'
+export type * from './models/Player'
+export type * from './models/RoomPlayer'
+export type * from './models/GameRound'
+export type * from './models/Vote'
+export type * from './models/Message'
 export type * from './commonInputTypes'

@@ -1,0 +1,85 @@
+Table users {
+  userId uuid [pk]
+  username varchar(50) [unique]
+  email varchar(100) [unique]
+  password varchar(500)
+  createdAt datetime
+}
+
+Table categories {
+  categoryId uuid [pk]
+  name varchar(100) [unique]
+}
+
+Table words {
+  wordId uuid [pk]
+  text varchar(50) [unique]
+  categoryId uuid
+}
+
+Table rooms {
+  roomId uuid [pk]
+  code varchar(100) [unique]
+  private boolean
+  password varchar(500)
+  status varchar(20)
+  createdAt datetime
+  createdBy uuid
+}
+
+Table players {
+  playerId uuid [pk]
+  nickname varchar(100)
+  createdAt datetime
+}
+
+Table room_players {
+  id uuid [pk]
+  roomId uuid
+  playerId uuid
+  isAlive boolean
+
+  indexes {
+    (roomId, playerId) [unique]
+  }
+}
+
+Table game_rounds {
+  roundId uuid [pk]
+  roomId uuid
+  wordId uuid
+  status varchar(20)
+  createdAt datetime
+}
+
+Table votes {
+  voteId uuid [pk]
+  roundId uuid
+  voterId uuid
+  targetId uuid
+}
+
+Table messages {
+  messageId uuid [pk]
+  roundId uuid
+  playerId uuid
+  content varchar(250)
+  createdAt datetime
+}
+
+//// RELACIONES
+
+Ref: words.categoryId > categories.categoryId
+
+Ref: game_rounds.roomId > rooms.roomId
+Ref: game_rounds.wordId > words.wordId
+
+Ref: room_players.roomId > rooms.roomId
+Ref: room_players.playerId > players.playerId
+
+Ref: votes.roundId > game_rounds.roundId
+Ref: votes.voterId > players.playerId
+Ref: votes.targetId > players.playerId
+
+Ref: messages.roundId > game_rounds.roundId
+Ref: messages.playerId > players.playerId

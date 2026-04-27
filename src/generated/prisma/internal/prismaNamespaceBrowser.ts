@@ -51,7 +51,15 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  Category: 'Category',
+  Word: 'Word',
+  Room: 'Room',
+  Player: 'Player',
+  RoomPlayer: 'RoomPlayer',
+  GameRound: 'GameRound',
+  Vote: 'Vote',
+  Message: 'Message'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -81,6 +89,87 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const CategoryScalarFieldEnum = {
+  categoryId: 'categoryId',
+  name: 'name'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const WordScalarFieldEnum = {
+  wordId: 'wordId',
+  text: 'text',
+  categoryId: 'categoryId'
+} as const
+
+export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]
+
+
+export const RoomScalarFieldEnum = {
+  roomId: 'roomId',
+  code: 'code',
+  private: 'private',
+  password: 'password',
+  status: 'status',
+  createdAt: 'createdAt',
+  createdBy: 'createdBy'
+} as const
+
+export type RoomScalarFieldEnum = (typeof RoomScalarFieldEnum)[keyof typeof RoomScalarFieldEnum]
+
+
+export const PlayerScalarFieldEnum = {
+  playerId: 'playerId',
+  nickname: 'nickname',
+  createdAt: 'createdAt'
+} as const
+
+export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
+
+
+export const RoomPlayerScalarFieldEnum = {
+  id: 'id',
+  roomId: 'roomId',
+  playerId: 'playerId',
+  isAlive: 'isAlive'
+} as const
+
+export type RoomPlayerScalarFieldEnum = (typeof RoomPlayerScalarFieldEnum)[keyof typeof RoomPlayerScalarFieldEnum]
+
+
+export const GameRoundScalarFieldEnum = {
+  roundId: 'roundId',
+  roomId: 'roomId',
+  wordId: 'wordId',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type GameRoundScalarFieldEnum = (typeof GameRoundScalarFieldEnum)[keyof typeof GameRoundScalarFieldEnum]
+
+
+export const VoteScalarFieldEnum = {
+  voteId: 'voteId',
+  roundId: 'roundId',
+  voterId: 'voterId',
+  targetId: 'targetId'
+} as const
+
+export type VoteScalarFieldEnum = (typeof VoteScalarFieldEnum)[keyof typeof VoteScalarFieldEnum]
+
+
+export const MessageScalarFieldEnum = {
+  messageId: 'messageId',
+  roundId: 'roundId',
+  playerId: 'playerId',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -95,4 +184,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

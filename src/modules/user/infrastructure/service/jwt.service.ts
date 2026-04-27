@@ -1,9 +1,10 @@
 import { AuthUserPayload } from '@common/interfaces/auth-user-payload.interface';
+import { JwtPort } from '@modules/user/domain/ports/out/jwt.port';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class JwtAuthService {
+export class JwtAuthService implements JwtPort {
   constructor(private readonly jwtService: JwtService) {}
 
   async generateToken(payload: AuthUserPayload): Promise<string> {
@@ -11,7 +12,7 @@ export class JwtAuthService {
     return token;
   }
 
-  async verifyToken(token: string): Promise<any> {
+  async verifyToken(token: string): Promise<AuthUserPayload> {
     return await this.jwtService.verifyAsync(token);
   }
 

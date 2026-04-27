@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { JwtAuthService } from '../service/jwt.service';
 
 import { HASH_SERVICE, HashService } from '@common/security/hash/has.service';
 import UserException from '@modules/user/domain/errors/user.exception';
@@ -8,12 +7,13 @@ import AuthLoginPort from '@modules/user/domain/ports/input/auth-login.port';
 import UserRepository, {
   USER_REPOSITORY,
 } from '@modules/user/domain/ports/out/user-repository.port';
+import { JWT_SERVICE, JwtPort } from '@modules/user/domain/ports/out/jwt.port';
 
 @Injectable()
 export default class AuthLoginUseCase implements AuthLoginPort {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepo: UserRepository,
-    private readonly jwtAuthService: JwtAuthService,
+    @Inject(JWT_SERVICE) private readonly jwtAuthService: JwtPort,
     @Inject(HASH_SERVICE) private readonly hashService: HashService,
   ) {}
 

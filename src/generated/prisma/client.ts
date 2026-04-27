@@ -44,3 +44,43 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Category
+ * 
+ */
+export type Category = Prisma.CategoryModel
+/**
+ * Model Word
+ * 
+ */
+export type Word = Prisma.WordModel
+/**
+ * Model Room
+ * 
+ */
+export type Room = Prisma.RoomModel
+/**
+ * Model Player
+ * 
+ */
+export type Player = Prisma.PlayerModel
+/**
+ * Model RoomPlayer
+ * 
+ */
+export type RoomPlayer = Prisma.RoomPlayerModel
+/**
+ * Model GameRound
+ * 
+ */
+export type GameRound = Prisma.GameRoundModel
+/**
+ * Model Vote
+ * 
+ */
+export type Vote = Prisma.VoteModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel

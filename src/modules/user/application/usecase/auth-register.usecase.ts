@@ -6,17 +6,17 @@ import UserException from '@modules/user/domain/errors/user.exception';
 import User from '@modules/user/domain/model/user.model';
 import ValidatorError from '@common/error/validator.error';
 import { HASH_SERVICE, HashService } from '@common/security/hash/has.service';
-import { JwtAuthService } from '../service/jwt.service';
 import AuthRegisterPort from '@modules/user/domain/ports/input/auth-register.port';
 import UserRepository, {
   USER_REPOSITORY,
 } from '@modules/user/domain/ports/out/user-repository.port';
+import { JWT_SERVICE, JwtPort } from '@modules/user/domain/ports/out/jwt.port';
 
 @Injectable()
 export default class AuthRegisterUseCase implements AuthRegisterPort {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepo: UserRepository,
-    private readonly jwtAuthService: JwtAuthService,
+    @Inject(JWT_SERVICE) private readonly jwtAuthService: JwtPort,
     @Inject(HASH_SERVICE) private readonly hashService: HashService,
   ) {}
 

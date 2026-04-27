@@ -10,6 +10,7 @@ export const UserRule: Record<
     MIN: 4,
     PATTERN: /^[a-z0-9_.]+$/,
     REQUIRED: true,
+    TYPE: 'string',
   },
   PASSWORD: {
     FIELD: 'password',
@@ -17,6 +18,7 @@ export const UserRule: Record<
     MIN: 8,
     PATTERN: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/,
     REQUIRED: true,
+    TYPE: 'string',
   },
   EMAIL: {
     FIELD: 'email',
@@ -24,5 +26,6 @@ export const UserRule: Record<
     MIN: 5,
     PATTERN: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     REQUIRED: true,
+    TYPE: 'string',
   },
 } as const;

@@ -26,7 +26,12 @@ export default class JwtAuthGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const token = this.extractToken(request);
 
-    if (!token) throw new BaseException(SYSTEM_ERROR.AUTH_TOKEN_MISSING);
+    if (!token)
+      throw new BaseException(
+        this.authConfig.isProduction
+          ? SYSTEM_ERROR.UNAUTHORIZED
+          : SYSTEM_ERROR.AUTH_TOKEN_MISSING,
+      );
 
     request['user'] = await this.validateSession.execute(token);
     return true;

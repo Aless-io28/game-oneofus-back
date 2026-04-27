@@ -11,12 +11,127 @@ datasource db {
   provider = "postgresql"
 }
 
+// Session management
 model User {
-  userId    String    @db.Uuid            @id @default(uuid())
-  username  String    @db.VarChar(50)     @unique
-  email     String    @db.VarChar(100)    @unique
-  password  String    @db.VarChar(500)
-  createdAt DateTime  @default(now())
+  userId    String      @db.Uuid              @id @default(uuid())
+  username  String      @db.VarChar(50)       @unique
+  email     String      @db.VarChar(100)      @unique
+  password  String      @db.VarChar(500)
+  createdAt DateTime                          @default(now())
 
   @@map("users")
+}
+
+// Utils in game
+model Category {
+  categoryId String     @db.Uuid              @id @default(uuid())
+  name       String     @db.VarChar(100)      @unique
+
+  words Word[]
+
+  @@map("categories")
+}
+
+model Word {
+  wordId     String     @db.Uuid              @id @default(uuid())
+  text       String     @db.VarChar(50)       @unique
+  categoryId String     @db.Uuid
+
+  category Category     @relation(fields: [categoryId], references: [categoryId])
+  rounds   GameRound[]
+
+  @@map("words")
+}
+
+// Game management
+model Room {
+  roomId    String      @db.Uuid              @id @default(uuid())
+  code      String      @db.VarChar(100)      @unique
+  private   Boolean     @db.Boolean           @default(false)
+  password  String?     @db.VarChar(500)
+  status    String      @db.VarChar(20)       @default("waiting") // waiting, in_progress, finished
+  createdAt DateTime    @default(now())
+  createdBy String      @db.Uuid
+
+  gameRounds GameRound[]
+  roomPlayers RoomPlayer[]
+
+  @@map("rooms")
+}
+
+model Player {
+  playerId    String    @db.Uuid            @id @default(uuid())
+  nickname    String    @db.VarChar(100)
+  createdAt   DateTime  @default(now())
+
+  roomPlayers   RoomPlayer[]
+  messages      Message[]
+
+  votesGiven    Vote[]  @relation("Voter")
+  votesReceived Vote[]  @relation("Target")
+
+  @@index([nickname])
+
+  @@map("players")
+}
+
+model RoomPlayer {
+  id        String      @db.Uuid           @id @default(uuid())
+  roomId    String      @db.Uuid
+  playerId  String      @db.Uuid
+
+  isAlive   Boolean                        @default(true)
+
+  room      Room        @relation(fields: [roomId], references: [roomId])
+  player    Player      @relation(fields: [playerId], references: [playerId])
+
+  @@unique([roomId, playerId])
+
+  @@map("room_players")
+}
+
+model GameRound {
+  roundId   String      @db.Uuid            @id @default(uuid())
+  roomId    String      @db.Uuid
+  wordId    String      @db.Uuid
+  status    String      @db.VarChar(20)     @default("waiting")
+  createdAt DateTime                        @default(now())
+
+  room      Room        @relation(fields: [roomId], references: [roomId])
+  word      Word        @relation(fields: [wordId], references: [wordId])
+
+  messages  Message[]
+  votes     Vote[]
+
+  @@map("game_rounds")
+}
+
+model Vote {
+  voteId    String      @db.Uuid            @id @default(uuid())
+  roundId   String      @db.Uuid
+  voterId   String      @db.Uuid
+  targetId  String      @db.Uuid
+
+  round     GameRound   @relation(fields: [roundId], references: [roundId])
+  voter     Player      @relation("Voter", fields: [voterId], references: [playerId])
+target    Player      @relation("Target", fields: [targetId], references: [playerId])
+
+  @@index([roundId])
+  @@index([voterId])
+  @@index([targetId])
+
+  @@map("votes")
+}
+
+model Message {
+  messageId String      @db.Uuid            @id @default(uuid())
+  roundId   String      @db.Uuid
+  playerId  String      @db.Uuid
+  content   String      @db.VarChar(250)
+  createdAt DateTime                        @default(now())
+
+  round     GameRound   @relation(fields: [roundId], references: [roundId])
+  player    Player      @relation(fields: [playerId], references: [playerId])
+
+  @@map("messages")
 }
